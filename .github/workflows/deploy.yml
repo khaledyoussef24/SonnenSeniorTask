@@ -9,36 +9,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-      - name: Install kind
-        uses: engineerd/setup-kind@v0.6.1
-      - name: Create kind cluster
-        run: kind create cluster --name ci-nginx
-      - name: Set kubeconfig
-        run: echo "KUBECONFIG=$(kind get kubeconfig-path --name=ci-nginx)" >> $GITHUB_ENV
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+      - uses: actions/checkout@v4
+
+      - uses: engineerd/setup-kind@v0.6.2
+        with:
+          version: "v0.24.0"
+
+      - run: kind create cluster --name ci-nginx
+
+      - run: echo "KUBECONFIG=$(kind get kubeconfig-path --name=ci-nginx)" >> $GITHUB_ENV
+
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.4.0
-      - name: Terraform Init
+
+      - run: terraform init
         working-directory: terraform
-        run: terraform init
-      - name: Terraform Apply
+
+      - run: terraform apply -auto-approve
         working-directory: terraform
-        run: terraform apply -auto-approve
-      - name: Wait for deployment
-        run: |
-          kubectl rollout status deployment/nginx-app -n nginx-app --timeout=120s
-      - name: Port-forward & curl
-        run: |
+
+      - run: kubectl rollout status deployment/nginx-app -n nginx-app --timeout=120s
+
+      - run: |
           kubectl port-forward svc/nginx-app -n nginx-app 8080:80 &
           sleep 10
           curl --fail http://localhost:8080
-      - name: Terraform Destroy
-        if: always()
-        working-directory: terraform
+
+      - if: always()
         run: terraform destroy -auto-approve
-      - name: Delete kind cluster
-        if: always()
+        working-directory: terraform
+
+      - if: always()
         run: kind delete cluster --name ci-nginx
