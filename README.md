@@ -5,6 +5,16 @@
 
 ---
 
+## Getting Started
+
+Clone the repository and change into the project directory:
+
+```bash
+git clone https://github.com/khaledyoussef24/SonnenSeniorTask
+cd SonnenSeniorTask
+```
+````
+
 ## Overview
 
 This repository contains a complete solution for deploying a custom NGINX web application to Kubernetes using Helm and Terraform, fully automated via GitHub Actions. The app serves a bespoke `index.html` page in place of the default NGINX welcome screen. You’ll find:
@@ -31,6 +41,7 @@ This repository contains a complete solution for deploying a custom NGINX web ap
    ```bash
    kubectl create namespace nginx-app --dry-run=client -o yaml | kubectl apply -f -
    ```
+
 ````
 
 2. **Install the chart**
@@ -184,3 +195,4 @@ spec:
 - Define Alertmanager rules for high latency, 5xx spikes, or pod restarts
 
 ---
+````
