@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: stable
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+customHtml: |
+  <html>
+    <head><title>Custom NGINX Page</title></head>
+    <body>
+      <h1>Hello from Custom NGINX Page!</h1>
+    </body>
+  </html>

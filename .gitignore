@@ -1,0 +1,11 @@
+# Helm template outputs
+**/rendered.yaml
+**/svc.yaml
+**/svc-generated.yaml
+
+# Kind kubeconfig files
+kind-*.kubeconfig
+
+# Terraform local state
+terraform/.terraform/
+terraform/terraform.tfstate*

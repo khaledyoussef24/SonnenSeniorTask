@@ -1,0 +1,11 @@
+service:
+  type: ClusterIP
+  port: 80
+
+customHtml: |
+  <html>
+    <head><title>Custom NGINX Page</title></head>
+    <body>
+      <h1>Hello Sonnen This is Khaled from Terraform-deployed NGINX!</h1>
+    </body>
+  </html>
