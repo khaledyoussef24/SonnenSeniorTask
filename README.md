@@ -15,6 +15,8 @@ cd SonnenSeniorTask
 ```
 ````
 
+---
+
 ## Overview
 
 This repository contains a complete solution for deploying a custom NGINX web application to Kubernetes using Helm and Terraform, fully automated via GitHub Actions. The app serves a bespoke `index.html` page in place of the default NGINX welcome screen. You’ll find:
@@ -38,11 +40,10 @@ This repository contains a complete solution for deploying a custom NGINX web ap
 ## Deploying the Helm Chart
 
 1. **Create the namespace**
+
    ```bash
    kubectl create namespace nginx-app --dry-run=client -o yaml | kubectl apply -f -
    ```
-
-````
 
 2. **Install the chart**
 
@@ -135,64 +136,21 @@ We selected [KinD (Kubernetes in Docker)](https://kind.sigs.k8s.io/) because it:
 
 ### 1. Multi-Environment Deployments
 
-- Maintain separate values files for each environment (e.g. `values-prod.yaml`, `values-staging.yaml`, `values-test.yaml`)
+- Maintain separate values files for **production**, **staging**, and **testing** (e.g. `values-prod.yaml`, `values-staging.yaml`, `values-test.yaml`)
 - Use Git branches, Helmfile, or Terraform workspaces to drive environment-specific deployments
 
-### 2. Ingress Routing
+### 2. Ingress Routing (`ingress.yaml`)
 
-Add an `ingress.yaml` template to expose the service under a hostname and TLS:
+Add an `Ingress` template to expose the service under a hostname and TLS configuration.
 
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: nginx-ingress
-  namespace: nginx-app
-spec:
-  rules:
-    - host: nginx.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: nginx-app
-                port:
-                  number: 80
-```
+### 3. Horizontal Pod Autoscaling (`hpa.yaml`)
 
-### 3. Horizontal Pod Autoscaling
-
-Include `hpa.yaml` to scale pods based on CPU utilization:
-
-```yaml
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: nginx-hpa
-  namespace: nginx-app
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: nginx-app
-  minReplicas: 1
-  maxReplicas: 5
-  metrics:
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: 50
-```
+Include an HPA manifest to scale pods based on CPU utilization.
 
 ### 4. Observability with Prometheus & Grafana
 
-- Deploy a Prometheus server to scrape NGINX metrics (via the Prometheus NGINX exporter)
-- Install Grafana and import dashboards for CPU, memory, request rates, and error rates
-- Define Alertmanager rules for high latency, 5xx spikes, or pod restarts
+- Deploy **Prometheus** to scrape NGINX metrics via the NGINX exporter
+- Install **Grafana** and import dashboards for CPU, memory, request rates, and error rates
+- Define **Alertmanager** rules for high latency, error spikes, or pod restarts
 
 ---
-````
