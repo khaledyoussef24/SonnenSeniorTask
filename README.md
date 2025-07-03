@@ -155,6 +155,6 @@ Include an HPA manifest to scale pods based on CPU utilization.
 
 ### 5. Index File Directory
 
-- Make files for the NGINX files (Index , pages files and assets)
+- Make files for the NGINX files (Index , pages files and assets) to make the proccess easier for developers to update their files.
 
 ---
