@@ -153,4 +153,8 @@ Include an HPA manifest to scale pods based on CPU utilization.
 - Install **Grafana** and import dashboards for CPU, memory, request rates, and error rates
 - Define **Alertmanager** rules for high latency, error spikes, or pod restarts
 
+### 5. Index File Directory
+
+- Make files for the NGINX files (Index , pages files and assets)
+
 ---
